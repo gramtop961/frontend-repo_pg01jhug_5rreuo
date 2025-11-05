@@ -1,7 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { ArrowRight, Download, Edit2, Trash2, ChevronDown } from 'lucide-react';
-import Spline from '@splinetool/react-spline';
-import HeroCover from './HeroCover';
+import React, { useMemo, useState, useRef } from 'react';
+import { ArrowRight, Download, Edit2, Trash2, ChevronDown, Printer } from 'lucide-react';
 
 const SectionTitle = ({ title, subtitle }) => (
   <div className="mb-4 sm:mb-6">
@@ -10,32 +8,24 @@ const SectionTitle = ({ title, subtitle }) => (
   </div>
 );
 
+// 1) Home hero: solid pink background, no images/animations
 const HomeHero = () => {
   return (
-    <section className="relative w-full h-[70vh] min-h-[480px] rounded-xl overflow-hidden shadow">
-      <Spline scene="https://prod.spline.design/zhZFnwyOYLgqlLWk/scene.splinecode" style={{ width: '100%', height: '100%' }} />
-      <img
-        src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=1920&auto=format&fit=crop"
-        alt="Books background"
-        className="pointer-events-none absolute inset-0 w-full h-full object-cover opacity-25"
-      />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent" />
-      <div className="absolute inset-0 flex items-center justify-center px-6">
-        <div className="max-w-3xl text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight" style={{ color: '#222222' }}>
-            Selamat Datang di Open Library Telkom
-          </h1>
-          <p className="mt-4 text-base sm:text-lg text-gray-700">
-            Akses perpustakaan digital akademik Telkom University. Jelajahi jurnal, e-book, dan repositori ilmiah dengan cepat dan mudah.
-          </p>
-          <div className="mt-6 flex items-center justify-center gap-3">
-            <a href="#koleksi" className="px-4 py-2 rounded-md text-white" style={{ backgroundColor: '#C60000' }}>
-              Jelajahi Koleksi
-            </a>
-            <a href="#bantuan" className="px-4 py-2 rounded-md border text-gray-700 hover:bg-gray-50" style={{ borderColor: '#C60000' }}>
-              Pusat Bantuan
-            </a>
-          </div>
+    <section className="relative w-full rounded-xl overflow-hidden shadow p-10 sm:p-14 md:p-20" style={{ background: 'linear-gradient(135deg, #fda4af 0%, #f43f5e 100%)' }}>
+      <div className="max-w-3xl">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-white">
+          Selamat Datang di Open Library Telkom
+        </h1>
+        <p className="mt-4 text-base sm:text-lg text-white/90">
+          Akses perpustakaan digital akademik Telkom University. Jelajahi jurnal, e-book, dan repositori ilmiah dengan cepat dan mudah.
+        </p>
+        <div className="mt-6 flex items-center gap-3">
+          <a href="#koleksi" className="px-4 py-2 rounded-md text-rose-600 bg-white font-medium">
+            Jelajahi Koleksi
+          </a>
+          <a href="#bantuan" className="px-4 py-2 rounded-md border border-white text-white/90 hover:bg-white/10">
+            Pusat Bantuan
+          </a>
         </div>
       </div>
     </section>
@@ -52,43 +42,58 @@ const StatCard = ({ label, value, accent = '#C60000' }) => (
   </div>
 );
 
+// 2) Collections: no welcome/integrated text. Show stats and book list with readers
+const sampleBooks = [
+  {
+    id: 1,
+    title: 'The Adventures of Sherlock Holmes',
+    author: 'Arthur Conan Doyle',
+    type: 'E-Book',
+    href: 'https://www.gutenberg.org/cache/epub/1661/pg1661-images.html',
+  },
+  {
+    id: 2,
+    title: 'Pride and Prejudice',
+    author: 'Jane Austen',
+    type: 'E-Book',
+    href: 'https://www.gutenberg.org/files/1342/1342-h/1342-h.htm',
+  },
+  {
+    id: 3,
+    title: 'A Brief History of Time (Sample PDF)',
+    author: 'Stephen Hawking',
+    type: 'PDF',
+    href: 'https://arxiv.org/pdf/2102.13067.pdf',
+  },
+  {
+    id: 4,
+    title: 'Machine Learning Basics (PDF)',
+    author: 'Open Source',
+    type: 'PDF',
+    href: 'https://arxiv.org/pdf/1811.12808.pdf',
+  },
+];
+
 const Collections = () => {
   return (
     <div className="space-y-6">
-      <HeroCover />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard label="Total Koleksi" value="12.430" />
-        <StatCard label="File Terunggah" value="3.214" accent="#444444" />
-        <StatCard label="Aktivitas Terbaru" value="57" accent="#999999" />
+        <StatCard label="File Terunggah" value="3.214" accent="#f43f5e" />
+        <StatCard label="Akses Bulan Ini" value="2.187" accent="#fb7185" />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <SectionTitle title="Koleksi Terbaru" subtitle="Tambahan koleksi dalam 7 hari terakhir" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="p-4 rounded-lg border border-gray-200 bg-white hover:shadow-sm transition">
-                <div className="text-sm text-gray-500">Jurnal</div>
-                <div className="mt-1 font-medium" style={{ color: '#222222' }}>Riset Telekomunikasi #{i}</div>
-                <button className="mt-3 text-sm text-red-700 hover:underline">Lihat Detail</button>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <SectionTitle title="Rekomendasi Bacaan" subtitle="Dipersonalisasi untuk Anda" />
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-start justify-between p-4 rounded-lg border border-gray-200">
-                <div>
-                  <div className="text-sm text-gray-500">E-Book</div>
-                  <div className="mt-0.5 font-medium" style={{ color: '#222222' }}>Data Science Fundamentals {i}</div>
-                </div>
-                <button className="text-sm inline-flex items-center gap-1 text-red-700 hover:underline">
-                  Baca <ArrowRight size={14} />
-                </button>
-              </div>
-            ))}
-          </div>
+
+      <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <SectionTitle title="Koleksi Buku Asli" subtitle="Klik buku untuk membaca" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {sampleBooks.map((b) => (
+            <a key={b.id} href={b.href} target="_blank" rel="noreferrer" className="p-4 rounded-lg border border-gray-200 bg-white hover:shadow-sm transition">
+              <div className="text-xs uppercase tracking-wide text-gray-500">{b.type}</div>
+              <div className="mt-1 font-medium" style={{ color: '#222222' }}>{b.title}</div>
+              <div className="text-sm text-gray-600">{b.author}</div>
+              <div className="mt-3 inline-flex items-center gap-1 text-rose-600 font-medium">Baca <ArrowRight size={14} /></div>
+            </a>
+          ))}
         </div>
       </div>
     </div>
@@ -195,7 +200,7 @@ const SimpleBarChart = ({ data }) => {
 const SimplePieChart = ({ data }) => {
   const total = useMemo(() => data.reduce((s, d) => s + d.value, 0) || 1, [data]);
   let cumulative = 0;
-  const colors = ['#C60000', '#444444', '#999999', '#F5F5F5'];
+  const colors = ['#C60000', '#f43f5e', '#fb7185', '#F5F5F5'];
   return (
     <svg viewBox="0 0 42 42" className="w-48 h-48">
       {data.map((d, i) => {
@@ -222,6 +227,7 @@ const SimplePieChart = ({ data }) => {
 };
 
 const Reports = () => {
+  const [category, setCategory] = useState('Semua');
   const barData = [
     { label: 'Jurnal', value: 120 },
     { label: 'E-Book', value: 90 },
@@ -234,61 +240,85 @@ const Reports = () => {
     { label: 'Favorit', value: 20 },
   ];
   const [range, setRange] = useState('Mingguan');
+  const printRef = useRef(null);
+
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <div className="space-y-6">
+      {/* Print styles to export only the report area */}
+      <style>{`
+        @media print {
+          body * { visibility: hidden; }
+          #report-print-area, #report-print-area * { visibility: visible; }
+          #report-print-area { position: absolute; left: 0; top: 0; width: 100%; }
+        }
+      `}</style>
+
       <div className="flex items-center justify-between flex-wrap gap-3">
         <h3 className="text-xl font-semibold" style={{ color: '#444444' }}>Laporan & Analisis Aktivitas Pengguna</h3>
         <div className="flex items-center gap-2">
+          <select value={category} onChange={(e) => setCategory(e.target.value)} className="border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500 text-sm">
+            <option>Semua</option>
+            <option>Jurnal</option>
+            <option>E-Book</option>
+            <option>Repositori</option>
+            <option>Tesis</option>
+          </select>
           <select value={range} onChange={(e) => setRange(e.target.value)} className="border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500 text-sm">
             <option>Harian</option>
             <option>Mingguan</option>
             <option>Bulanan</option>
           </select>
-          <button className="inline-flex items-center gap-2 px-3 py-2 rounded-md border text-sm" style={{ borderColor: '#C60000', color: '#C60000' }}>
-            Download Report (PDF) <Download size={16} />
+          <button onClick={handlePrint} className="inline-flex items-center gap-2 px-3 py-2 rounded-md border text-sm" style={{ borderColor: '#C60000', color: '#C60000' }}>
+            Download PDF <Download size={16} />
           </button>
-          <button className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-white text-sm" style={{ backgroundColor: '#C60000' }}>
-            Cetak
+          <button onClick={handlePrint} className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-white text-sm" style={{ backgroundColor: '#C60000' }}>
+            Cetak <Printer size={16} />
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <SectionTitle title="Unduhan per Kategori" />
-          <SimpleBarChart data={barData} />
-        </div>
-        <div>
-          <SectionTitle title="Distribusi Aktivitas" />
-          <div className="bg-white rounded-xl border border-gray-200 p-5 flex items-center justify-center">
-            <SimplePieChart data={pieData} />
+      <div id="report-print-area" ref={printRef} className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <SectionTitle title={`Unduhan per Kategori (${category})`} />
+            <SimpleBarChart data={barData} />
+          </div>
+          <div>
+            <SectionTitle title="Distribusi Aktivitas" />
+            <div className="bg-white rounded-xl border border-gray-200 p-5 flex items-center justify-center">
+              <SimplePieChart data={pieData} />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-5">
-        <SectionTitle title="Ringkasan" subtitle={`Periode: ${range}`} />
-        <div className="overflow-auto">
-          <table className="min-w-full text-sm">
-            <thead>
-              <tr className="text-left text-gray-600">
-                <th className="py-2">Metrix</th>
-                <th className="py-2">Nilai</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['Total Pengguna Aktif', '1.240'],
-                ['Total Unduhan', '6.532'],
-                ['Rata-rata Durasi Sesi', '12m 45s'],
-              ].map(([k, v]) => (
-                <tr key={k} className="border-t border-gray-100">
-                  <td className="py-2 pr-4">{k}</td>
-                  <td className="py-2 pr-4">{v}</td>
+        <div className="bg-white rounded-xl border border-gray-200 p-5">
+          <SectionTitle title="Ringkasan" subtitle={`Periode: ${range}`} />
+          <div className="overflow-auto">
+            <table className="min-w-full text-sm">
+              <thead>
+                <tr className="text-left text-gray-600">
+                  <th className="py-2">Metrix</th>
+                  <th className="py-2">Nilai</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {[
+                  ['Total Pengguna Aktif', '1.240'],
+                  ['Total Unduhan', '6.532'],
+                  ['Rata-rata Durasi Sesi', '12m 45s'],
+                ].map(([k, v]) => (
+                  <tr key={k} className="border-t border-gray-100">
+                    <td className="py-2 pr-4">{k}</td>
+                    <td className="py-2 pr-4">{v}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -296,17 +326,30 @@ const Reports = () => {
 };
 
 const Profile = () => {
+  const [avatar, setAvatar] = useState('https://api.dicebear.com/7.x/initials/svg?seed=OT');
+  const fileRef = useRef(null);
+
+  const onPick = () => fileRef.current?.click();
+  const onFile = (e) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => setAvatar(String(evt.target?.result || ''));
+    reader.readAsDataURL(f);
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div className="bg-white rounded-xl border border-gray-200 p-5">
         <SectionTitle title="Foto Pengguna" />
         <div className="flex flex-col items-center">
           <img
-            src="https://api.dicebear.com/7.x/initials/svg?seed=OT"
+            src={avatar}
             alt="avatar"
-            className="w-28 h-28 rounded-full border border-gray-200"
+            className="w-28 h-28 rounded-full border border-gray-200 object-cover"
           />
-          <button className="mt-3 px-3 py-2 rounded-md text-sm border" style={{ borderColor: '#C60000', color: '#C60000' }}>
+          <input ref={fileRef} onChange={onFile} type="file" accept="image/*" className="hidden" />
+          <button onClick={onPick} className="mt-3 px-3 py-2 rounded-md text-sm border" style={{ borderColor: '#C60000', color: '#C60000' }}>
             Ubah Foto
           </button>
         </div>
@@ -361,33 +404,61 @@ const FAQItem = ({ q, a }) => {
 };
 
 const Help = () => {
+  const [nama, setNama] = useState('');
+  const [email, setEmail] = useState('');
+  const [subjek, setSubjek] = useState('');
+  const [pesan, setPesan] = useState('');
+
+  const handleEmail = () => {
+    const to = 'openlibrary@telkomuniv.ac.id';
+    const subject = encodeURIComponent(subjek || 'Pertanyaan Open Library');
+    const body = encodeURIComponent(`Nama: ${nama}\nEmail: ${email}\n\nPesan:\n${pesan}`);
+    window.location.href = `mailto:${to}?subject=${subject}&body=${body}`;
+  };
+
+  const faqs = [
+    ['Bagaimana cara mengunggah koleksi?', 'Buka menu Input Data, lengkapi formulir, lalu klik Tambah Koleksi Baru.'],
+    ['Bagaimana mencari koleksi?', 'Gunakan kolom pencarian di bagian atas untuk mencari berdasarkan judul, penulis, atau kategori.'],
+    ['Perbedaan peran akun', 'Mahasiswa: akses baca; Dosen: unggah/kurasi; Staf: administrasi penuh.'],
+    ['Cara mengunduh laporan PDF', 'Buka menu Laporan, pilih kategori dan periode, lalu klik Download PDF untuk mencetak sebagai PDF.'],
+  ];
+
   return (
-    <div className="space-y-6">
-      <h3 className="text-xl font-semibold" style={{ color: '#444444' }}>Pusat Bantuan Open Library Telkom</h3>
-      <div className="space-y-3">
-        {[
-          ['Bagaimana cara mengunggah koleksi?', 'Buka menu Input Data, lengkapi formulir, lalu klik Tambah Koleksi Baru.'],
-          ['Bagaimana mencari koleksi?', 'Gunakan kolom pencarian di bagian atas untuk mencari berdasarkan judul, penulis, atau kategori.'],
-          ['Siapa yang dapat mengakses?', 'Mahasiswa dan dosen dengan akun aktif dapat masuk dan mengelola koleksi sesuai peran.'],
-        ].map(([q, a]) => (
-          <FAQItem key={q} q={q} a={a} />
-        ))}
+    <div className="space-y-8">
+      <div>
+        <h3 className="text-xl font-semibold" style={{ color: '#444444' }}>Pusat Bantuan Open Library Telkom</h3>
+        <p className="text-sm text-gray-600 mt-1">Pertanyaan umum dan panduan cepat.</p>
+        <div className="mt-4 space-y-3">
+          {faqs.map(([q, a]) => (
+            <FAQItem key={q} q={q} a={a} />
+          ))}
+        </div>
       </div>
-      <div className="flex items-center gap-3">
-        <a
-          href="#"
-          className="inline-flex items-center px-3 py-2 rounded-md text-sm border"
-          style={{ borderColor: '#C60000', color: '#C60000' }}
-        >
-          Dokumentasi (PDF)
-        </a>
-        <a
-          href="#"
-          className="inline-flex items-center px-3 py-2 rounded-md text-sm text-white"
-          style={{ backgroundColor: '#C60000' }}
-        >
-          Hubungi Kami
-        </a>
+
+      <div id="bantuan" className="bg-white rounded-xl border border-gray-200 p-5">
+        <SectionTitle title="Hubungi Kami" subtitle="Kirimkan pertanyaan melalui email" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="text-sm text-gray-700">Nama</label>
+            <input value={nama} onChange={(e) => setNama(e.target.value)} className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
+          </div>
+          <div>
+            <label className="text-sm text-gray-700">Email</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="text-sm text-gray-700">Subjek</label>
+            <input value={subjek} onChange={(e) => setSubjek(e.target.value)} className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="text-sm text-gray-700">Pesan</label>
+            <textarea rows={4} value={pesan} onChange={(e) => setPesan(e.target.value)} className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
+          </div>
+        </div>
+        <div className="mt-4 flex items-center gap-3">
+          <button onClick={handleEmail} className="px-4 py-2 rounded-md text-white" style={{ backgroundColor: '#C60000' }}>Kirim Email</button>
+          <a href="mailto:openlibrary@telkomuniv.ac.id" className="px-4 py-2 rounded-md border text-sm" style={{ borderColor: '#C60000', color: '#C60000' }}>openlibrary@telkomuniv.ac.id</a>
+        </div>
       </div>
     </div>
   );

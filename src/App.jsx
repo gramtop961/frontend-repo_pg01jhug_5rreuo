@@ -7,7 +7,7 @@ import AuthModal from './components/AuthModal';
 function App() {
   const [page, setPage] = useState('dashboard');
   const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState({ name: 'Mahasiswa', role: 'Student' });
+  const [user, setUser] = useState({ name: 'Mahasiswa', role: 'Mahasiswa' });
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login');
 
@@ -20,7 +20,7 @@ function App() {
         loggedIn={loggedIn}
         onLoginClick={() => { setAuthMode('login'); setAuthOpen(true); }}
         onRegisterClick={() => { setAuthMode('register'); setAuthOpen(true); }}
-        onLogout={() => { setLoggedIn(false); setUser({ name: 'Mahasiswa', role: 'Student' }); setPage('dashboard'); }}
+        onLogout={() => { setLoggedIn(false); setUser({ name: 'Mahasiswa', role: 'Mahasiswa' }); setPage('dashboard'); }}
       />
 
       <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex gap-6 py-6">
@@ -47,9 +47,9 @@ function App() {
         open={authOpen}
         mode={authMode}
         onClose={() => setAuthOpen(false)}
-        onLoginSuccess={() => {
+        onLoginSuccess={(payload) => {
           setLoggedIn(true);
-          setUser({ name: 'Akun Telkom', role: 'Member' });
+          setUser({ name: payload?.name || 'Akun Telkom', role: payload?.role || 'Mahasiswa' });
         }}
       />
     </div>

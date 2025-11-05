@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, ArrowRight } from 'lucide-react';
 
 const Input = (props) => (
@@ -8,8 +8,19 @@ const Input = (props) => (
   />
 );
 
+const Select = (props) => (
+  <select
+    {...props}
+    className={`mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500 ${props.className || ''}`}
+  />
+);
+
 const AuthModal = ({ open, mode: initialMode = 'login', onClose, onLoginSuccess }) => {
   const [mode, setMode] = useState(initialMode);
+  const [role, setRole] = useState('Mahasiswa');
+  const [name, setName] = useState('');
+
+  useEffect(() => setMode(initialMode), [initialMode]);
 
   if (!open) return null;
 
@@ -32,6 +43,14 @@ const AuthModal = ({ open, mode: initialMode = 'login', onClose, onLoginSuccess 
         {mode === 'login' ? (
           <div className="space-y-4">
             <div>
+              <label className="text-sm text-gray-700">Peran</label>
+              <Select value={role} onChange={(e) => setRole(e.target.value)}>
+                <option>Mahasiswa</option>
+                <option>Dosen</option>
+                <option>Staf Open Library</option>
+              </Select>
+            </div>
+            <div>
               <label className="text-sm text-gray-700">Email / NIM</label>
               <Input placeholder="email@telkomuniv.ac.id / 1101xxxx" />
             </div>
@@ -41,7 +60,8 @@ const AuthModal = ({ open, mode: initialMode = 'login', onClose, onLoginSuccess 
             </div>
             <button
               onClick={() => {
-                onLoginSuccess?.();
+                const derivedName = role === 'Mahasiswa' ? 'Mahasiswa' : role === 'Dosen' ? 'Dosen Telkom' : 'Staf Open Library';
+                onLoginSuccess?.({ name: derivedName, role });
                 onClose?.();
               }}
               className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-white font-medium"
@@ -59,12 +79,20 @@ const AuthModal = ({ open, mode: initialMode = 'login', onClose, onLoginSuccess 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-sm text-gray-700">Nama Lengkap</label>
-                <Input placeholder="Nama sesuai KTP/KTM" />
+                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Nama sesuai KTP/KTM" />
               </div>
               <div>
                 <label className="text-sm text-gray-700">NIM</label>
                 <Input placeholder="1101xxxx" />
               </div>
+            </div>
+            <div>
+              <label className="text-sm text-gray-700">Peran</label>
+              <Select value={role} onChange={(e) => setRole(e.target.value)}>
+                <option>Mahasiswa</option>
+                <option>Dosen</option>
+                <option>Staf Open Library</option>
+              </Select>
             </div>
             <div>
               <label className="text-sm text-gray-700">Email</label>
@@ -82,7 +110,7 @@ const AuthModal = ({ open, mode: initialMode = 'login', onClose, onLoginSuccess 
             </div>
             <button
               onClick={() => {
-                onLoginSuccess?.();
+                onLoginSuccess?.({ name: name || 'Pengguna Baru', role });
                 onClose?.();
               }}
               className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-white font-medium"
