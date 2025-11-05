@@ -1,6 +1,46 @@
 import React, { useMemo, useState } from 'react';
 import { ArrowRight, Download, Edit2, Trash2, ChevronDown } from 'lucide-react';
+import Spline from '@splinetool/react-spline';
 import HeroCover from './HeroCover';
+
+const SectionTitle = ({ title, subtitle }) => (
+  <div className="mb-4 sm:mb-6">
+    <h3 className="text-lg sm:text-xl font-semibold" style={{ color: '#444444' }}>{title}</h3>
+    {subtitle && <p className="text-sm text-gray-600 mt-1">{subtitle}</p>}
+  </div>
+);
+
+const HomeHero = () => {
+  return (
+    <section className="relative w-full h-[70vh] min-h-[480px] rounded-xl overflow-hidden shadow">
+      <Spline scene="https://prod.spline.design/zhZFnwyOYLgqlLWk/scene.splinecode" style={{ width: '100%', height: '100%' }} />
+      <img
+        src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?q=80&w=1920&auto=format&fit=crop"
+        alt="Books background"
+        className="pointer-events-none absolute inset-0 w-full h-full object-cover opacity-25"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-white via-white/10 to-transparent" />
+      <div className="absolute inset-0 flex items-center justify-center px-6">
+        <div className="max-w-3xl text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight" style={{ color: '#222222' }}>
+            Selamat Datang di Open Library Telkom
+          </h1>
+          <p className="mt-4 text-base sm:text-lg text-gray-700">
+            Akses perpustakaan digital akademik Telkom University. Jelajahi jurnal, e-book, dan repositori ilmiah dengan cepat dan mudah.
+          </p>
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <a href="#koleksi" className="px-4 py-2 rounded-md text-white" style={{ backgroundColor: '#C60000' }}>
+              Jelajahi Koleksi
+            </a>
+            <a href="#bantuan" className="px-4 py-2 rounded-md border text-gray-700 hover:bg-gray-50" style={{ borderColor: '#C60000' }}>
+              Pusat Bantuan
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
 const StatCard = ({ label, value, accent = '#C60000' }) => (
   <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4 sm:p-5">
@@ -12,157 +52,7 @@ const StatCard = ({ label, value, accent = '#C60000' }) => (
   </div>
 );
 
-const SectionTitle = ({ title, subtitle }) => (
-  <div className="mb-4 sm:mb-6">
-    <h3 className="text-lg sm:text-xl font-semibold" style={{ color: '#444444' }}>{title}</h3>
-    {subtitle && <p className="text-sm text-gray-600 mt-1">{subtitle}</p>}
-  </div>
-);
-
-const SimpleBarChart = ({ data }) => {
-  const max = useMemo(() => Math.max(...data.map(d => d.value), 1), [data]);
-  return (
-    <div className="w-full h-48 flex items-end gap-3 bg-white border border-gray-200 rounded-md p-3">
-      {data.map((d) => (
-        <div key={d.label} className="flex-1 flex flex-col items-center">
-          <div
-            className="w-full rounded-t-md"
-            style={{
-              height: `${(d.value / max) * 100}%`,
-              backgroundColor: '#C60000',
-            }}
-            title={`${d.label}: ${d.value}`}
-          />
-          <span className="mt-2 text-xs text-gray-600 truncate w-full text-center">{d.label}</span>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-const SimplePieChart = ({ data }) => {
-  const total = useMemo(() => data.reduce((s, d) => s + d.value, 0) || 1, [data]);
-  let cumulative = 0;
-  const colors = ['#C60000', '#444444', '#999999', '#F5F5F5'];
-  return (
-    <svg viewBox="0 0 42 42" className="w-48 h-48">
-      {data.map((d, i) => {
-        const dash = (d.value / total) * 100;
-        const dashArray = `${dash} ${100 - dash}`;
-        const dashOffset = 100 - cumulative;
-        cumulative += dash;
-        return (
-          <circle
-            key={d.label}
-            r="15.915"
-            cx="21"
-            cy="21"
-            fill="transparent"
-            stroke={colors[i % colors.length]}
-            strokeWidth="6"
-            strokeDasharray={dashArray}
-            strokeDashoffset={dashOffset}
-          />
-        );
-      })}
-    </svg>
-  );
-};
-
-const LoginRegister = ({ onLogin }) => {
-  const [mode, setMode] = useState('login');
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-      <div className="hidden md:block">
-        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-          <img
-            src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1200&auto=format&fit=crop"
-            alt="Library illustration"
-            className="w-full h-96 object-cover rounded-lg"
-          />
-          <p className="mt-3 text-sm text-gray-600">
-            Jelajahi ribuan koleksi digital, jurnal, dan karya ilmiah di satu tempat.
-          </p>
-        </div>
-      </div>
-      <div>
-        <div className="flex items-center gap-2 mb-6">
-          <div className="w-10 h-10 rounded-md flex items-center justify-center" style={{ backgroundColor: '#C60000' }}>
-            <span className="text-white font-bold">OL</span>
-          </div>
-          <div>
-            <div className="font-semibold text-lg" style={{ color: '#222222' }}>Open Library Telkom</div>
-            <div className="text-xs text-gray-500">Masuk untuk melanjutkan</div>
-          </div>
-        </div>
-
-        {mode === 'login' ? (
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm text-gray-700">Email / NIM</label>
-                <input className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
-              </div>
-              <div>
-                <label className="text-sm text-gray-700">Kata Sandi</label>
-                <input type="password" className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
-              </div>
-              <button
-                onClick={() => onLogin?.()}
-                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-white font-medium"
-                style={{ backgroundColor: '#C60000' }}
-              >
-                Masuk <ArrowRight size={16} />
-              </button>
-              <div className="flex items-center justify-between text-sm">
-                <button className="text-red-700 hover:underline">Lupa Kata Sandi?</button>
-                <button onClick={() => setMode('register')} className="text-gray-700 hover:underline">Buat Akun</button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm text-gray-700">Nama Lengkap</label>
-                <input className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
-              </div>
-              <div>
-                <label className="text-sm text-gray-700">NIM</label>
-                <input className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
-              </div>
-              <div>
-                <label className="text-sm text-gray-700">Email</label>
-                <input className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
-              </div>
-              <div>
-                <label className="text-sm text-gray-700">Kata Sandi</label>
-                <input type="password" className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
-              </div>
-              <div className="sm:col-span-2">
-                <label className="text-sm text-gray-700">Konfirmasi Kata Sandi</label>
-                <input type="password" className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
-              </div>
-            </div>
-            <button
-              onClick={() => onLogin?.()}
-              className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-md text-white font-medium"
-              style={{ backgroundColor: '#C60000' }}
-            >
-              Daftar
-            </button>
-            <div className="mt-3 text-sm text-center">
-              Sudah punya akun?{' '}
-              <button onClick={() => setMode('login')} className="text-red-700 hover:underline">Masuk</button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const Dashboard = () => {
+const Collections = () => {
   return (
     <div className="space-y-6">
       <HeroCover />
@@ -281,6 +171,56 @@ const InputMonitoring = () => {
   );
 };
 
+const SimpleBarChart = ({ data }) => {
+  const max = useMemo(() => Math.max(...data.map(d => d.value), 1), [data]);
+  return (
+    <div className="w-full h-48 flex items-end gap-3 bg-white border border-gray-200 rounded-md p-3">
+      {data.map((d) => (
+        <div key={d.label} className="flex-1 flex flex-col items-center">
+          <div
+            className="w-full rounded-t-md"
+            style={{
+              height: `${(d.value / max) * 100}%`,
+              backgroundColor: '#C60000',
+            }}
+            title={`${d.label}: ${d.value}`}
+          />
+          <span className="mt-2 text-xs text-gray-600 truncate w-full text-center">{d.label}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const SimplePieChart = ({ data }) => {
+  const total = useMemo(() => data.reduce((s, d) => s + d.value, 0) || 1, [data]);
+  let cumulative = 0;
+  const colors = ['#C60000', '#444444', '#999999', '#F5F5F5'];
+  return (
+    <svg viewBox="0 0 42 42" className="w-48 h-48">
+      {data.map((d, i) => {
+        const dash = (d.value / total) * 100;
+        const dashArray = `${dash} ${100 - dash}`;
+        const dashOffset = 100 - cumulative;
+        cumulative += dash;
+        return (
+          <circle
+            key={d.label}
+            r="15.915"
+            cx="21"
+            cy="21"
+            fill="transparent"
+            stroke={colors[i % colors.length]}
+            strokeWidth="6"
+            strokeDasharray={dashArray}
+            strokeDashoffset={dashOffset}
+          />
+        );
+      })}
+    </svg>
+  );
+};
+
 const Reports = () => {
   const barData = [
     { label: 'Jurnal', value: 120 },
@@ -376,15 +316,15 @@ const Profile = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="text-sm text-gray-700">Nama</label>
-            <input className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
+            <input defaultValue="Akun Telkom" className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
           </div>
           <div>
             <label className="text-sm text-gray-700">NIM</label>
-            <input className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
+            <input defaultValue="1101xxxx" className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
           </div>
           <div>
             <label className="text-sm text-gray-700">Email</label>
-            <input type="email" className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
+            <input type="email" defaultValue="email@telkomuniv.ac.id" className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
           </div>
           <div>
             <label className="text-sm text-gray-700">Fakultas</label>
@@ -395,8 +335,8 @@ const Profile = () => {
             </select>
           </div>
           <div className="sm:col-span-2">
-            <label className="text-sm text-gray-700">Kata Sandi Baru</label>
-            <input type="password" className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
+            <label className="text-sm text-gray-700">Kata Sandi Baru (opsional)</label>
+            <input type="password" placeholder="Biarkan kosong jika tidak ingin mengubah" className="mt-1 w-full border-gray-200 rounded-md focus:ring-red-500 focus:border-red-500" />
           </div>
         </div>
         <button className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-md text-white" style={{ backgroundColor: '#C60000' }}>
@@ -453,16 +393,14 @@ const Help = () => {
   );
 };
 
-const Pages = ({ page, loggedIn, onLoginSuccess }) => {
-  if (!loggedIn) {
-    return <LoginRegister onLogin={onLoginSuccess} />;
-  }
+const Pages = ({ page }) => {
+  if (page === 'dashboard') return <HomeHero />;
+  if (page === 'collections') return <Collections />;
   if (page === 'input') return <InputMonitoring />;
   if (page === 'reports') return <Reports />;
   if (page === 'profile') return <Profile />;
   if (page === 'help') return <Help />;
-  // Collections can reuse dashboard sections for now
-  return <Dashboard />;
+  return <HomeHero />;
 };
 
 export default Pages;
